@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Bootstrap 101 Template</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!-- Bootstrap -->
+<link href="bootstrap2/css/bootstrap.min.css" rel="stylesheet" media="screen">
+<link href="css/timeSetting.css" rel="stylesheet" media="screen">
+
+<script src="js/jquery-1.11.3.js"></script>
+<script src="bootstrap2/js/bootstrap.min.js"></script>
+
+<script src="js/src/timeSetting.js"></script>
+    <script src="js/src/datePlugin.js"></script>
+</head>
+<body>
+<div id="alart-error-template" class="template">
+    <div class="alert alert-block alert-error">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <h4>Error!</h4>
+        <div id="alart-desc"></div>
+    </div>
+</div>
+
+<div id="alart-success-template" class="template">
+    <div class="alert alert-block alert-success">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <h4>Success!</h4>
+        <div id="alart-desc"></div>
+    </div>
+</div>
+
+<div id="alart-warning-template" class="template">
+    <div class="alert alert-block">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <h4>Warning!</h4>
+        <div id="alart-desc"></div>
+    </div>
+</div>
+
+<div id="option-item-template" class="template">
+    <tr class='opt-item'>
+        <td id="opt"></td>
+        <td><input type="text" class="option-content" id="opt-content"></td>
+        <td><input type="checkbox" id="opt-right">是</td>
+    </tr>
+</div>
+
+<div id="time-detail-template" class="template">
+    <div class="form-horizontal" id="question" data-type="">
+         <span class="navbar-parse">作业提交阶段</span><hr>
+        <div class="control-group">
+
+            <label class="control-label">开始时间：</label>
+            <div class="controls">
+                <input class="span4 time-setting" type="text" id="CommitStartTime">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">结束时间：</label>
+            <div class="controls">
+               <input class="span4 time-setting" type="text" id="CommitEndTime">
+            </div>
+        </div>
+
+
+        <span class="navbar-parse">互评阶段</span><hr>
+        <div class="control-group">
+
+            <label class="control-label">开始时间：</label>
+            <div class="controls">
+                <input class="span4 time-setting" type="text" id="PeerAssessmentStartTime">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label">结束时间：</label>
+            <div class="controls">
+               <input class="span4 time-setting" type="text" id="PeerAssessmentEndTime">
+            </div>
+        </div>
+
+        <span class="navbar-parse">学生审查阶段</span><hr>
+        <div class="control-group">
+
+            <label class="control-label">开始时间：</label>
+            <div class="controls">
+                <input class="span4 time-setting" type="text" id="AuditStartTime">
+            </div>
+        </div>
+        <div class="control-group ">
+            <label class="control-label">结束时间：</label>
+            <div class="controls">
+               <input class="span4 time-setting" type="text" id="AuditEndTime">
+            </div>
+        </div>
+
+        <span class="navbar-parse">成绩公布阶段</span><hr>
+        <div class="control-group">
+
+            <label class="control-label">成绩公布时间：</label>
+            <div class="controls">
+                <input class="span4 time-setting" type="text" id="PublishTime">
+            </div>
+        </div>
+
+        </div>
+        <div class="form-actions">
+            <a class="btn btn-success" id="save-btn">保存</a>
+        </div>
+    </div>
+</div>
+
+<div class="navbar">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="brand">时间设置</a>
+        </div>
+    </div>
+</div>
+
+<div id="time-detail"></div>
+
+</body>
+
+</html>

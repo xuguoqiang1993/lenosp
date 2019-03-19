@@ -85,16 +85,16 @@ public class LoginController {
     @PostMapping(value = "/login")
     public String login(SysUser user, Model model, String rememberMe, HttpServletRequest request) {
         String codeMsg = (String) request.getAttribute("shiroLoginFailure");
-        if ("code.error".equals(codeMsg)) {
-            model.addAttribute("message", "验证码错误");
-            return "/login";
-        }
+//        if ("code.error".equals(codeMsg)) {
+//            model.addAttribute("message", "验证码错误");
+//            return "/login";
+//        }
         UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername().trim(),
                 user.getPassword());
         Subject subject = ShiroUtil.getSubject();
         String msg = null;
         try {
-            subject.login(token);
+           subject.login(token);
             //subject.hasRole("admin");
             if (subject.isAuthenticated()) {
                 return "redirect:/main";
@@ -172,5 +172,12 @@ public class LoginController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    @GetMapping("/jsp")
+    public String toJps(Model model) {
+        model.addAttribute("welcome", "不建议使用jsp");
+        return "hello";
     }
 }

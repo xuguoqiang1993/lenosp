@@ -1,5 +1,5 @@
 spring:
   profiles:
-    active: mysql-dev
+    active: mysql8-dev
 #    可切换sqlserver
 #    active: sqlserver-dev

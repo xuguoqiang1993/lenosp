@@ -1,0 +1,23 @@
+/* CSS for ExerciseMdfXBlock */
+
+.exercisemdf_block .count {
+    font-weight: bold;
+}
+
+.exercisemdf_block p {
+    cursor: pointer;
+}
+
+.option-content {
+    width: 80%;
+}
+
+.template {
+    display: none;
+}
+
+.navbar-search-question {
+    margin-top: 6px;
+    margin-right: 13px;
+}
+

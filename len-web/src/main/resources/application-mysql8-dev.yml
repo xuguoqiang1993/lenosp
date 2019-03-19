@@ -1,5 +1,8 @@
 server:
   port: 8081
+  jsp-servlet:
+    init-parameters:
+      development: true
 spring:
   devtools:
       restart:
@@ -25,6 +28,10 @@ spring:
         testOnReturn: false
         poolPreparedStatements: true
         maxOpenPreparedStatements: 20
+  mvc:
+      view:
+       prefix: /jsp
+       suffix: .jsp
   http:
       encoding:
         force: true

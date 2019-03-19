@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title>len-脚手架</title>
+  <title>网上110</title>
   <link rel="stylesheet" href="${re.contextPath}/plugin/plugins/layui/css/layui.css" media="all" />
   <link rel="stylesheet" href="${re.contextPath}/plugin/plugins/font-awesome/css/font-awesome.min.css" media="all" />
   <link rel="stylesheet" href="${re.contextPath}/plugin/build/css/app.css" media="all" />
@@ -19,13 +19,13 @@
 <body class="kit-theme">
 <div class="layui-layout layui-layout-admin kit-layout-admin">
   <div class="layui-header">
-    <div class="layui-logo">len-脚手架</div>
+    <div class="layui-logo">网上110</div>
     <div class="layui-logo kit-logo-mobile"></div>
-    <div class="layui-hide-xs">
+   <#-- <div class="layui-hide-xs">
     <ul class="layui-nav layui-layout-left kit-nav">
       <li class="layui-nav-item"><a href="javascript:s();">会员管理</a></li>
         <li class="layui-nav-item"><a href="javascript:;" kit-target data-options="{url:'/article/articleList',icon:'&#xe658;',title:'文章管理',id:'966'}">文章管理</a></li>
-      <#--<li class="layui-nav-item"><a href="javascript:;" id="pay"><i class="fa fa-gratipay" aria-hidden="true"></i> 捐赠我</a></li>-->
+      &lt;#&ndash;<li class="layui-nav-item"><a href="javascript:;" id="pay"><i class="fa fa-gratipay" aria-hidden="true"></i> 捐赠我</a></li>&ndash;&gt;
       <li class="layui-nav-item">
         <a href="javascript:;">其它系统</a>
         <dl class="layui-nav-child">
@@ -35,7 +35,7 @@
         </dl>
       </li>
     </ul>
-    </div>
+    </div>-->
     <ul class="layui-nav layui-layout-right kit-nav">
       <li class="layui-nav-item">
         <a href="javascript:;">
@@ -99,9 +99,9 @@
   </div>
 
   <div class="layui-footer">
-  <!-- 底部固定区域 -->
-  2017 &copy;
-  <a target="_blank" href="https://my.oschina.net/u/3312115/blog">开源中国博客</a> 由zxm倾心打造的一款快速开发脚手架 <#--技术交流请联系本人-154040976@qq.com-->
+
+  2018 &copy;
+  <a >绍兴高速交警支队</a>
 </div>
 </div>
 <script src="${re.contextPath}/plugin/plugins/layui/layui.js"></script>

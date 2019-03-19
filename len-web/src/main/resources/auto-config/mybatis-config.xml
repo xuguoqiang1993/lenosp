@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+
 <generatorConfiguration>
+
   <context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
     <property name="beginningDelimiter" value="`"/>
     <property name="endingDelimiter" value="`"/>
@@ -21,28 +23,31 @@
     </commentGenerator>
 
     <!-- jdbc连接 -->
-    <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                    connectionURL="jdbc:mysql://localhost:3306/lenos" userId="root"
-                    password="123456" />
+    <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                    connectionURL="jdbc:mysql://localhost:3306/lenos?serverTimezone=UTC" userId="root"
+                    password="root" />
     <!--mode-->
     <javaModelGenerator targetPackage="com.len.entity"
-                        targetProject="len-activiti/src/main/java">
+                        targetProject="E:/IDEA/lenosp/len-activiti/src/main/java">
       <property name="enableSubPackages" value="true"/>
 
       <property name="trimStrings" value="true" />
     </javaModelGenerator>
     <!--生成映射文件存放位置-->
-    <sqlMapGenerator targetPackage="com.len.mapper" targetProject="len-activiti/src/main/java" >
+    <sqlMapGenerator targetPackage="mapper" targetProject="E:/IDEA/lenosp/len-activiti/src/main/resources" >
       <property name="enableSubPackages" value="true"/>
     </sqlMapGenerator>
     <!--生成Dao类存放位置-->
     <javaClientGenerator targetPackage="com.len.mapper"
-                         targetProject="len-activiti/src/main/java" type="XMLMAPPER" >
+                         targetProject="E:/IDEA/lenosp/len-activiti/src/main/java" type="XMLMAPPER" >
       <property name="enableSubPackages" value="true"/>
     </javaClientGenerator>
     <!--生成table 先建表 后生成 勿随意覆盖本身table 避免功能缺失  测试 自己找其他表测试 by zxm-->
-    <table tableName="act_assignee" domainObjectName="ActAssignee">
+    <table tableName="car_mess" domainObjectName="CarMess">
       <generatedKey column="id" sqlStatement="JDBC"/>
+      <ignoreColumn column="created_date"  delimitedColumnName="true" />
+      <ignoreColumn column="updated_date"  delimitedColumnName="true" />
+
     </table>
     <!-- enableCountByExample="false"
      enableUpdateByExample="false"
