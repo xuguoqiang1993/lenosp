@@ -569,12 +569,7 @@ jQuery(function() {
     			type : "POST",
     			url : BASE_URL+"/report/event/insertReportAgainstLawByMassRecord",
     			data : {
-    			 "userId":BASE_USERID,
-    			 "userBill" : BASE_USERNAME,  //电话
-    			 "username" : BASE_NICKNAME,  //昵称
-    			 "userDept": BASE_DEPTNAME,   //部门
-    			 
-    			 "eventCarNo":eventCarNo,
+    			    "eventCarNo":eventCarNo,
      			"eventCarNoColor":eventCarNoColor,
      			"eventCarNoType":eventCarNoType,
      			"eventCarColor":eventCarColor,

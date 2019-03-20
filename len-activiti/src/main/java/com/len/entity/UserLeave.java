@@ -1,11 +1,12 @@
 package com.len.entity;
 
+import lombok.ToString;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
-
+@ToString
 @Table(name = "user_leave")
 public class UserLeave extends BaseTask {
 

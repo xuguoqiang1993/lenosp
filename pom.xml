@@ -43,11 +43,11 @@
     <!-- （1）base classloader （Base类加载器）：加载不改变的Class，例如：第三方提供的jar包。 -->
     <!-- （2）restart classloader（Restart类加载器）：加载正在开发的Class。 -->
     <!-- 为什么重启很快，因为重启的时候只是加载了在开发的Class，没有重新加载第三方的jar包。 -->
-    <dependency>
+   <!-- <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
       <optional>true</optional>
-    </dependency>
+    </dependency>-->
 
 
 
@@ -421,13 +421,13 @@
         </configuration>
       </plugin>
 
-          <plugin>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-maven-plugin</artifactId>
-            <configuration>
-              <fork>true</fork>
-            </configuration>
-          </plugin>
+          <!--<plugin>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-maven-plugin</artifactId>-->
+            <!--<configuration>-->
+              <!--<fork>true</fork>-->
+            <!--</configuration>-->
+          <!--</plugin>-->
 
       <!--<plugin>
         <groupId>org.springframework.boot</groupId>

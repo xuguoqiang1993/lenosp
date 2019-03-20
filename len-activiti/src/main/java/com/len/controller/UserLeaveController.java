@@ -188,6 +188,7 @@ public class UserLeaveController extends BaseController {
         return "/act/leave/leaveDetail";
     }
 
+
     @GetMapping("addLeave")
     public String addLeave() {
         return "/act/leave/add-leave";
@@ -235,6 +236,7 @@ public class UserLeaveController extends BaseController {
     @ResponseBody
     public JsonUtil addLeave(Model model, UserLeave userLeave) {
         JsonUtil j = new JsonUtil();
+        System.out.println(userLeave);
         if (userLeave == null) {
             return JsonUtil.error("获取数据失败");
         }
