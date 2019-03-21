@@ -32,6 +32,7 @@ public class Application {
         //1.8 forEach循环
 //    Arrays.asList(names).forEach(System.out::println);
         System.out.println("succ");
+        System.out.println("succ");
         System.out.println("Server start succ");
 
 
