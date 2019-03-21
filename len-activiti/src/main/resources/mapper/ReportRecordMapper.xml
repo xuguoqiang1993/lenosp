@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.len.mapper.ReportRecordMapper">
+  <resultMap id="BaseResultMap" type="com.len.entity.ReportRecord">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="event_car_no" jdbcType="VARCHAR" property="eventCarNo" />
+    <result column="event_car_no_type" jdbcType="VARCHAR" property="eventCarNoType" />
+    <result column="event_car_no_color" jdbcType="VARCHAR" property="eventCarNoColor" />
+    <result column="event_car_color" jdbcType="VARCHAR" property="eventCarColor" />
+    <result column="event_car_type" jdbcType="VARCHAR" property="eventCarType" />
+    <result column="event_road" jdbcType="VARCHAR" property="eventRoad" />
+    <result column="event_car_dir" jdbcType="VARCHAR" property="eventCarDir" />
+    <result column="event_run_km" jdbcType="VARCHAR" property="eventRunKm" />
+    <result column="event_run_m" jdbcType="VARCHAR" property="eventRunM" />
+    <result column="event_time" jdbcType="VARCHAR" property="eventTime" />
+    <result column="car_event" jdbcType="VARCHAR" property="carEvent" />
+    <result column="filestr" jdbcType="VARCHAR" property="filestr" />
+    <result column="event_description" jdbcType="VARCHAR" property="eventDescription" />
+  </resultMap>
+</mapper>
