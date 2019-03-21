@@ -97,45 +97,45 @@ public class ReportController {
 //
 //    }
 //
-//    @RequestMapping(value = "/uploadFilesEventByMass", produces = "text/html;charset=UTF-8")
-//    @ResponseBody
-//    public String uploadFilesEventByMass(@RequestParam("file") MultipartFile sortPicImg, HttpServletRequest request,
-//                                         HttpServletResponse response) {
-//        JSONObject json = new JSONObject();
-//       if(!sortPicImg.isEmpty()){
-//           String eventCarNo = request.getParameter("eventCarNo");
-//           String path = "D:"+sepa+"unlawful" + sepa + DateUtil.nowDate() + sepa + eventCarNo  ;
-//
-//           String fileName = System.currentTimeMillis()+ "_" + sortPicImg.getOriginalFilename();
-//           System.out.println(fileName);
-//           File parentFile = new File(path);
-//           if(!parentFile.exists()){
-//               parentFile.mkdirs();
-//           }
-//           File targetFile = new File(path+sepa+fileName);
-//
-//           // 保存
-//           try {
-//               sortPicImg.transferTo(targetFile);
-//           } catch (Exception e) {
-//               e.printStackTrace();
-//               json.put("msg", "error");
-//               return json.toJSONString();
-//           }
-//           json.put("msg", "success");
-//           // json.put("filePath",request.getContextPath() + "/upload/" +
-//           // fileName);
-//           File retfile = new File(path, fileName);
-//           json.put("filePath", retfile.getPath());
-//           json.put("fileDirPath", path);
-//           System.out.println("json=" + json.toJSONString());
-//           return json.toJSONString();
-//       }else{
-//           json.put("msg", "error");
-//           return json.toJSONString();
-//       }
-//
-//    }
+    @RequestMapping(value = "/uploadImg", produces = "text/html;charset=UTF-8")
+    @ResponseBody
+    public String uploadFilesEventByMass(@RequestParam("file") MultipartFile sortPicImg, HttpServletRequest request,
+                                         HttpServletResponse response) {
+        JSONObject json = new JSONObject();
+       if(!sortPicImg.isEmpty()){
+           String eventCarNo = request.getParameter("eventCarNo");
+           String path = "D:"+sepa+"unlawful" + sepa + DateUtil.nowDate() + sepa + eventCarNo  ;
+
+           String fileName = System.currentTimeMillis()+ "_" + sortPicImg.getOriginalFilename();
+           System.out.println(fileName);
+           File parentFile = new File(path);
+           if(!parentFile.exists()){
+               parentFile.mkdirs();
+           }
+           File targetFile = new File(path+sepa+fileName);
+
+           // 保存
+           try {
+               sortPicImg.transferTo(targetFile);
+           } catch (Exception e) {
+               e.printStackTrace();
+               json.put("msg", "error");
+               return json.toJSONString();
+           }
+           json.put("msg", "success");
+           // json.put("filePath",request.getContextPath() + "/upload/" +
+           // fileName);
+           File retfile = new File(path, fileName);
+           json.put("filePath", retfile.getPath());
+           json.put("fileDirPath", path);
+           System.out.println("json=" + json.toJSONString());
+           return json.toJSONString();
+       }else{
+           json.put("msg", "error");
+           return json.toJSONString();
+       }
+
+    }
 //
 //    @GetMapping(value = "showMyReport")
 //    public String showUser(Model model) {

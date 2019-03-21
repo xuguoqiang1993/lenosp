@@ -247,13 +247,14 @@
                 //执行实例
                 var uploadInst = upload.render({
                     elem: '#picImgs' //绑定元素
-                    ,url: "" //上传接口
+                    ,url: "${re.contextPath}/report/uploadImg" //上传接口
                     ,auto: false
                     ,multiple:true
-                    ,number:5
+                    ,number:2
                     ,drag:true
                     ,accept:'images'
                     ,bindAction: '#uploadReport'
+                    ,data:{eventCarNo:$("#eventCarNo").val()}
                     ,choose: function(obj){
                         var files = obj.pushFile();
                         //预读本地文件示例，不支持ie8
@@ -300,11 +301,11 @@
                     }
                     ,done: function(res){
                         //上传完毕回调
-                        if(res.code > 0){
-                            return layer.msg('上传失败');
-                        }else {
-                            return layer.msg('上传成功');
-                        }
+                        // if(res.code > 0){
+                        //     return layer.msg('上传失败');
+                        // }else {
+                        //     return layer.msg('上传成功');
+                        // }
                     }
                     ,error: function(){
                         //请求异常回调
