@@ -99,11 +99,11 @@ public class ReportController {
 //
     @RequestMapping(value = "/uploadImg", produces = "text/html;charset=UTF-8")
     @ResponseBody
-    public String uploadFilesEventByMass(@RequestParam("file") MultipartFile sortPicImg, HttpServletRequest request,
+    public String uploadFilesEventByMass(@RequestParam("file") MultipartFile sortPicImg, String eventCarNo,HttpServletRequest request,
                                          HttpServletResponse response) {
         JSONObject json = new JSONObject();
+        System.out.println(eventCarNo);
        if(!sortPicImg.isEmpty()){
-           String eventCarNo = request.getParameter("eventCarNo");
            String path = "D:"+sepa+"unlawful" + sepa + DateUtil.nowDate() + sepa + eventCarNo  ;
 
            String fileName = System.currentTimeMillis()+ "_" + sortPicImg.getOriginalFilename();

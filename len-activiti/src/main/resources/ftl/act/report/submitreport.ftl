@@ -121,6 +121,7 @@
        <div class="layui-form-item layui-form-text layui-col-md10" >
 
            <div class="layui-input-block" >
+          <input type="hidden" id="imgUrl" name="imgUrl" value=""/>
        <button type="button" class="layui-btn" id="picImgs">
            <i class="layui-icon">&#xe67c;</i>上传图片
        </button>
@@ -227,6 +228,13 @@
                     //车牌类型
                     //车辆颜色
                     //车辆类型
+                    layui.use('form', function(){
+                        var form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
+                        //但是，如果你的HTML是动态生成的，自动渲染就会失效
+                        //因此你需要在相应的地方，执行下述方法来手动渲染，跟这类似的还有 element.init();
+
+                        form.render();
+                    });
 
 
 
@@ -254,7 +262,11 @@
                     ,drag:true
                     ,accept:'images'
                     ,bindAction: '#uploadReport'
-                    ,data:{eventCarNo:$("#eventCarNo").val()}
+                    ,data:{
+                        eventCarNo: function(){
+                            return $('#eventCarNo').val();
+                        }
+                    }
                     ,choose: function(obj){
                         var files = obj.pushFile();
                         //预读本地文件示例，不支持ie8
@@ -299,13 +311,13 @@
 
                         });
                     }
-                    ,done: function(res){
-                        //上传完毕回调
-                        // if(res.code > 0){
-                        //     return layer.msg('上传失败');
-                        // }else {
-                        //     return layer.msg('上传成功');
-                        // }
+                    ,allDone: function(obj){ //当文件全部被提交后，才触发
+                        console.log(obj.total); //得到总文件数
+                        console.log(obj.successful); //请求成功的文件数
+                        console.log(obj.aborted); //请求失败的文件数
+                    }
+                    ,done: function(res, index, upload){ //每个文件提交一次触发一次。详见“请求成功的回调”
+                        imgUrl
                     }
                     ,error: function(){
                         //请求异常回调
@@ -317,9 +329,36 @@
                 var form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
                 //但是，如果你的HTML是动态生成的，自动渲染就会失效
                 //因此你需要在相应的地方，执行下述方法来手动渲染，跟这类似的还有 element.init();
-
+            form.on('submit(formDemo)', function(data) {
+                <#--$.ajax({-->
+                    <#--url:'${re.contextPath}/report/addReport',-->
+                    <#--type:'post',-->
+                    <#--data:data.field,-->
+                    <#--async:false, traditional: true,-->
+                    <#--success:function(d){-->
+                        <#--var index = parent.layer.getFrameIndex(window.name);-->
+                        <#--if(d.flag){-->
+                            <#--parent.layer.close(index);-->
+                            <#--window.parent.layui.table.reload('leaveList');-->
+                            <#--window.top.layer.msg(d.msg,{icon:6,offset: 'rb',area:['120px','80px'],anim:2});-->
+                        <#--}else{-->
+                            <#--layer.msg(d.msg,{icon:5});-->
+                        <#--}-->
+                    <#--},error:function(){-->
+                        <#--layer.alert("请求失败", {icon: 6},function () {-->
+                            <#--var index = parent.layer.getFrameIndex(window.name);-->
+                            <#--parent.layer.close(index);-->
+                        <#--});-->
+                    <#--}-->
+                <#--});-->
+            return false;
+             });
                form.render();
             });
+
+
+
+
 
         });
 
