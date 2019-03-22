@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="${re.contextPath}/plugin/layui/css/layui.css">
   <link rel="stylesheet" href="${re.contextPath}/plugin/lenos/main.css">
   <script type="text/javascript" src="${re.contextPath}/plugin/jquery/jquery-3.2.1.min.js"></script>
-  <script type="text/javascript" src="${re.contextPath}/plugin/layui/layui.js"
+  <script type="text/javascript" src="${re.contextPath}/plugin/layui/layui.all.js"
           charset="utf-8"></script>
 </head>
 
@@ -95,25 +95,24 @@
     .replace(/ss/g, hms[2]);
   };
 
-  // //数字前置补零
-  // layui.laytpl.digit = function(num, length, end){
-  //   var str = '';
-  //   num = String(num);
-  //   length = length || 2;
-  //   for(var i = num.length; i < length; i++){
-  //     str += '0';
-  //   }
-  //   return num < Math.pow(10, length) ? str + (num|0) : num;
-  // };
-  //
-  // document.onkeydown = function (e) { // 回车提交表单
-  //   var theEvent = window.event || e;
-  //   var code = theEvent.keyCode || theEvent.which;
-  //   if (code == 13) {
-  //     $(".select .select-on").click();
-  //   }
-  // }
+  //数字前置补零
+  layui.laytpl.digit = function(num, length, end){
+    var str = '';
+    num = String(num);
+    length = length || 2;
+    for(var i = num.length; i < length; i++){
+      str += '0';
+    }
+    return num < Math.pow(10, length) ? str + (num|0) : num;
+  };
 
+  document.onkeydown = function (e) { // 回车提交表单
+    var theEvent = window.event || e;
+    var code = theEvent.keyCode || theEvent.which;
+    if (code == 13) {
+      $(".select .select-on").click();
+    }
+  }
   layui.use('table', function () {
     var table = layui.table;
     //方法级渲染
@@ -204,10 +203,6 @@
     });
 
   });
-
-
-
-
   function del(id) {
     $.ajax({
       url: "del",
