@@ -21,21 +21,21 @@
   <div class="layui-header">
     <div class="layui-logo">网上110</div>
     <div class="layui-logo kit-logo-mobile"></div>
-    <div class="layui-hide-xs">
-    <ul class="layui-nav layui-layout-left kit-nav">
-      <li class="layui-nav-item"><a href="javascript:s();">会员管理</a></li>
-        <li class="layui-nav-item"><a href="javascript:;" kit-target data-options="{url:'/article/articleList',icon:'&#xe658;',title:'文章管理',id:'966'}">文章管理</a></li>
-      <#--<li class="layui-nav-item"><a href="javascript:;" id="pay"><i class="fa fa-gratipay" aria-hidden="true"></i> 捐赠我</a></li>-->
-      <li class="layui-nav-item">
-        <a href="javascript:;">其它系统</a>
-        <dl class="layui-nav-child">
-          <dd><a href="javascript:;">邮件管理</a></dd>
-          <dd><a href="javascript:;">消息管理</a></dd>
-          <dd><a href="javascript:;">授权管理</a></dd>
-        </dl>
-      </li>
-    </ul>
-    </div>
+    <#--<div class="layui-hide-xs">-->
+    <#--<ul class="layui-nav layui-layout-left kit-nav">-->
+      <#--<li class="layui-nav-item"><a href="javascript:s();">会员管理</a></li>-->
+        <#--<li class="layui-nav-item"><a href="javascript:;" kit-target data-options="{url:'/article/articleList',icon:'&#xe658;',title:'文章管理',id:'966'}">文章管理</a></li>-->
+      <#--&lt;#&ndash;<li class="layui-nav-item"><a href="javascript:;" id="pay"><i class="fa fa-gratipay" aria-hidden="true"></i> 捐赠我</a></li>&ndash;&gt;-->
+      <#--<li class="layui-nav-item">-->
+        <#--<a href="javascript:;">其它系统</a>-->
+        <#--<dl class="layui-nav-child">-->
+          <#--<dd><a href="javascript:;">邮件管理</a></dd>-->
+          <#--<dd><a href="javascript:;">消息管理</a></dd>-->
+          <#--<dd><a href="javascript:;">授权管理</a></dd>-->
+        <#--</dl>-->
+      <#--</li>-->
+    <#--</ul>-->
+    <#--</div>-->
     <ul class="layui-nav layui-layout-right kit-nav">
       <li class="layui-nav-item">
         <a href="javascript:;">
