@@ -141,16 +141,18 @@ public ReType showLeaveList(Model model, String page, String limit) {
     Page<ReportRecord> tPage = PageHelper.startPage(Integer.valueOf(page), Integer.valueOf(limit));
     try {
         tList = reportService.selectListByPage(record);
-        System.out.println(tList.get(0).getProcessInstanceId());
-//        for (ReportRecord record1 : tList) {
-//            ProcessInstance instance = runtimeService.createProcessInstanceQuery()
-//                    .processInstanceId(record1.getProcessInstanceId()).singleResult();
-//            //保证运行ing
-//            if (instance != null) {
-//                Task task = this.taskService.createTaskQuery().processInstanceId(record.getProcessInstanceId()).singleResult();
-//                record.setTaskName(task.getName());
-//            }
-//        }
+
+        for (ReportRecord record1 : tList) {
+            ProcessInstance instance = runtimeService.createProcessInstanceQuery()
+                    .processInstanceId(record1.getProcessInstanceId()).singleResult();
+            //保证运行ing
+            if (instance != null) {
+                Task task = taskService.createTaskQuery().processInstanceId(record1.getProcessInstanceId()).singleResult();
+                record.setTaskName(task.getName());
+                System.out.println(task.getName());
+                reportService.updateTaskNameByUserId(record);
+            }
+        }
     } catch (MyException e) {
         e.printStackTrace();
     }

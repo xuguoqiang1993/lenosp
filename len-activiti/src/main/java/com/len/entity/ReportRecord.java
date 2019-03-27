@@ -1,9 +1,10 @@
 package com.len.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Table(name = "report_record")
-public class ReportRecord {
+public class ReportRecord implements Serializable {
     @Id
     @GeneratedValue(generator = "JDBC")
     private Integer id;

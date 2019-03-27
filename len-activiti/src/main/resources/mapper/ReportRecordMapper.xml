@@ -21,6 +21,8 @@
     <result column="car_event" jdbcType="VARCHAR" property="carEvent" />
     <result column="filestr" jdbcType="VARCHAR" property="filestr" />
     <result column="event_description" jdbcType="VARCHAR" property="eventDescription" />
+    <result column="task_name" jdbcType="VARCHAR" property="taskName" />
+    <result column="process_instance_id" jdbcType="VARCHAR" property="processInstanceId" />
   </resultMap>
 
   <select id="selectListByPage" parameterType="com.len.entity.ReportRecord" resultMap="BaseResultMap">

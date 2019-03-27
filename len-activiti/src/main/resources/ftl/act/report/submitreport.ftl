@@ -354,10 +354,11 @@
                             }
                             });
                          // 将隐藏的文件路径清空
-
+                        $("#fileUrl").attr("value","");
                         console.log(obj.total); //得到总文件数
                         console.log(obj.successful); //请求成功的文件数
                         console.log(obj.aborted); //请求失败的文件数
+                        layer.msg("举报成功",{icon:6});
                     }
                     ,done: function(res, index, upload){ //每个文件提交一次触发一次。详见“请求成功的回调”
                        //文件路径拼接
@@ -372,7 +373,7 @@
                         $("#fileUrl").attr("value",fileurl);
                         console.log(res);
                         console.log(index);
-                           console.log("123412");
+                        console.log("123412");
                     }
                     ,error: function(){
                         //请求异常回调
