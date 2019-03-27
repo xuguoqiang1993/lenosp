@@ -3,6 +3,7 @@ package com.len.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.len.base.CurrentUser;
 import com.len.entity.*;
 import com.len.exception.MyException;
 import com.len.service.CarMessService;
@@ -10,7 +11,9 @@ import com.len.service.ReportRecordService;
 import com.len.util.*;
 
 import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +40,8 @@ public class ReportController {
     private ReportRecordService reportService;
     @Autowired
     private RuntimeService runtimeService;
+    @Autowired
+    TaskService taskService;
     //展示 违法举报From
     @GetMapping("showFromReport")
     public String showFromReport(){
@@ -53,50 +58,34 @@ public class ReportController {
     }
 
 
-//    @RequestMapping(value = "/insertReportAgainstLawByMassRecord")
-//    @ResponseBody
-//    public String fileUpload(ReportRecord record) throws IOException {
-//        //要判断img 和 filestr 是够存在
-//        String[] img = record.getImg();
-//        String fileStr = record.getFilestr();
-//        String eventCarNo = record.getEventCarNo();
-//        System.out.println(record.getEventTime());
-//
-//
-//        String path = "unlawful" + sepa + DateUtil.nowDate() + sepa + eventCarNo ;
-//
-//        for (int i = 0; i < img.length; i++) {
-//            System.out.println(img[i]);
-//            //将一些没用自动产生的图片删除
-//            if (!"data:image/png;base64".equals(img[i])) {
-//
-//                String imgName = System.currentTimeMillis() + "_视频截图.png";
-//                ImageUtils.decodeBase64ToImageOSS(img[i], path, imgName);
-//                if ("".equals(fileStr) || fileStr == null) {
-//                    fileStr = path + imgName;
-//                } else {
-//                    fileStr = fileStr + "," + path + imgName;
-//                }
-//            }
-//        }
-//
-//        // 开始插入数据库中
-//        System.out.println(fileStr);
-//        record.setFilestr(fileStr);
-//
-//        reportService.insertRecord(record);
-//
-//        //开启流程管理
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("baseTask", record);
-//        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("report_process", map);
-//        System.out.println(processInstance.getId());
-//
-//
-//        return "success";
-//
-//    }
-//
+    @RequestMapping(value = "/submitReportRecord")
+    @ResponseBody
+    public String fileUpload(ReportRecord record) throws IOException {
+        CurrentUser user = CommonUtil.getUser();
+        String id = user.getId();
+        String name = user.getUsername();
+        record.setUserId(id) ;
+        record.setUsername(name);
+        System.out.println("success");
+        //业务数据已经插入，开始开启流程
+        Map<String, Object> map = new HashMap<>();
+        map.put("baseTask", record);
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("report_process", map);
+        record.setProcessInstanceId(processInstance.getId());
+        reportService.insertRecord(record);
+
+        return "success";
+
+    }
+
+    /**
+     * 上传图片
+     * @param sortPicImg
+     * @param eventCarNo
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping(value = "/uploadImg", produces = "text/html;charset=UTF-8")
     @ResponseBody
     public String uploadFilesEventByMass(@RequestParam("file") MultipartFile sortPicImg, String eventCarNo,HttpServletRequest request,
@@ -123,11 +112,10 @@ public class ReportController {
                return json.toJSONString();
            }
            json.put("msg", "success");
-           // json.put("filePath",request.getContextPath() + "/upload/" +
-           // fileName);
+
            File retfile = new File(path, fileName);
-           json.put("filePath", retfile.getPath());
-           json.put("fileDirPath", path);
+           json.put("filepath", retfile.getPath());
+
            System.out.println("json=" + json.toJSONString());
            return json.toJSONString();
        }else{
@@ -137,28 +125,37 @@ public class ReportController {
 
     }
 //
-//    @GetMapping(value = "showMyReport")
-//    public String showUser(Model model) {
-//        return "/act/report/myreportList";
-//    }
-//
-//    //展示我的举报
-//    @GetMapping(value = "showMyReportList")
-//    @ResponseBody
-//    public ReType showLeaveList(Model model, String page, String limit) {
-//        String userId = CommonUtil.getUser().getId();
-//        ReportRecord record = new ReportRecord();
-//        record.setUserId(userId);
-//        List<ReportRecord> tList = null;
-//        Page<ReportRecord> tPage = PageHelper.startPage(Integer.valueOf(page), Integer.valueOf(limit));
-//        try {
-//          tList = reportService.selectByUserId(record);
-//
-//        } catch (MyException e) {
-//            e.printStackTrace();
+    @GetMapping(value = "showMyReport")
+    public String showUser(Model model) {
+        return "/act/report/myreportList";
+    }
+
+    //展示我的举报
+@GetMapping(value = "showReportList")
+@ResponseBody
+public ReType showLeaveList(Model model, String page, String limit) {
+    ReportRecord record = new ReportRecord();
+    String userId = CommonUtil.getUser().getId();
+    record.setUserId(userId);
+    List<ReportRecord> tList = null;
+    Page<ReportRecord> tPage = PageHelper.startPage(Integer.valueOf(page), Integer.valueOf(limit));
+    try {
+        tList = reportService.selectListByPage(record);
+        System.out.println(tList.get(0).getProcessInstanceId());
+//        for (ReportRecord record1 : tList) {
+//            ProcessInstance instance = runtimeService.createProcessInstanceQuery()
+//                    .processInstanceId(record1.getProcessInstanceId()).singleResult();
+//            //保证运行ing
+//            if (instance != null) {
+//                Task task = this.taskService.createTaskQuery().processInstanceId(record.getProcessInstanceId()).singleResult();
+//                record.setTaskName(task.getName());
+//            }
 //        }
-//        return new ReType(tPage.getTotal(), tList);
-//    }
+    } catch (MyException e) {
+        e.printStackTrace();
+    }
+    return new ReType(tPage.getTotal(), tList);
+}
 
 
 }

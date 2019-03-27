@@ -53,6 +53,8 @@
   <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="getProcImage"><i class="layui-icon">&#xe640;</i>查看流程图</a>
   <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="leaveDetail"><i class="layui-icon">&#xe640;</i>查看详情</a>
 </script>
+
+
 <script type="text/html" id="status">
   {{#if(typeof(d.taskName)!='undefined'){}}
     <div>${d.taskName}</div>
@@ -60,6 +62,7 @@
       结束
   {{# }}}
 </script>
+
 <script>
   layui.laytpl.toDateString = function(d, format){
     var date = new Date(d || new Date())

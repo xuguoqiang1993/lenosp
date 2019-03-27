@@ -110,18 +110,17 @@
     table.render({
       id: 'reportList',
       elem: '#reportList'
-      , url: 'showMyReportList'
+      , url: 'showReportList'
       , cols: [[
-          {checkbox: true, fixed: true, width: '5%'}
-        , {field: 'userName', title: '申请人', width: '10%', sort: true}
-        // , {field: 'beginTime', title: '开始时间', width: '10%', sort: true,templet: '<div>{{ layui.laytpl.toDateString(d.beginTime,"yyyy-MM-dd") }}</div>'}
-        // , {field: 'endTime', title: '结束时间', width: '10%', sort: true,templet: '<div>{{ layui.laytpl.toDateString(d.endTime,"yyyy-MM-dd") }}</div>'}
+         {checkbox: true, fixed: true, width: '5%'},
+         {field: 'eventCarNo', title: '车辆牌照', width: '10%', sort: true},
+        {field: 'eventRunKm', title: '公里桩', width: '10%', sort: true},
+        {field: 'eventRoad', title: '道路名称', width: '10%', sort: true},
+        {field: 'eventCarDir', title: '行车方向', width: '10%', sort: true},
+        {field: 'carEvent', title: '违法行为', width: '10%', sort: true},
+        {field: 'eventTime', title: '提交时间', width: '10%', sort: true, templet: '<div>{{ layui.laytpl.toDateString(d.beginTime,"yyyy-MM-dd") }}</div>'},
+        {field: 'text', title: '操作', width: '20%', toolbar:'#toolBar'}
 
-        // , {field: 'taskName', title: '状态', width: '10%',templet:'#status'}
-        // , {field: 'reason', title: '原因', width: '10%', sort: true}
-        // , {field: 'days', title: '天数', width: '10%', sort: true}
-        // , {field: 'processInstanceId', title: '流程定义id', width: '10%', sort: true}
-        // , {field: 'text', title: '操作', width: '20%', toolbar:'#toolBar'}
 
       ]]
       , page: true
@@ -154,40 +153,40 @@
     //   }
     // };
     //监听工具条
-      table.on('tool(report)', function (obj) {
-      var data = obj.data;
-      if (obj.event === 'start') {
-        start(data.key);
-      }else if(obj.event === 'getProcImage'){
-//        var url='getProcImage?processInstanceId='+data.processInstanceId+'';
-        layer.open({
-          id: 'report-image',
-          type: 2,
-          area: [ '880px', '400px'],
-          fix: false,
-          maxmin: true,
-          shadeClose: false,
-          shade: 0.4,
-          title: '流程图',
-            content: '/report/shinePics/' + data.processInstanceId
-        });
-      }else if(obj.event==='reportDetail'){
-        layer.open({
-          id: 'report-detail',
-          type: 2,
-          area: [ '880px', '400px'],
-          fix: false,
-          maxmin: true,
-          shadeClose: false,
-          shade: 0.4,
-          title: '审核详情',
-          content: "reportDetail?processId="+data.processInstanceId
-        });
-      }
-    });
-
-      eleClick(active,'.layui-col-md12 .layui-btn');
-      eleClick(active,'.select .layui-btn');
+//       table.on('tool(report)', function (obj) {
+//       var data = obj.data;
+//       if (obj.event === 'start') {
+//         start(data.key);
+//       }else if(obj.event === 'getProcImage'){
+// //        var url='getProcImage?processInstanceId='+data.processInstanceId+'';
+//         layer.open({
+//           id: 'report-image',
+//           type: 2,
+//           area: [ '880px', '400px'],
+//           fix: false,
+//           maxmin: true,
+//           shadeClose: false,
+//           shade: 0.4,
+//           title: '流程图',
+//             content: '/report/shinePics/' + data.processInstanceId
+//         });
+//       }else if(obj.event==='reportDetail'){
+//         layer.open({
+//           id: 'report-detail',
+//           type: 2,
+//           area: [ '880px', '400px'],
+//           fix: false,
+//           maxmin: true,
+//           shadeClose: false,
+//           shade: 0.4,
+//           title: '审核详情',
+//           content: "reportDetail?processId="+data.processInstanceId
+//         });
+//       }
+//     });
+//
+//       eleClick(active,'.layui-col-md12 .layui-btn');
+//       eleClick(active,'.select .layui-btn');
 
   });
 

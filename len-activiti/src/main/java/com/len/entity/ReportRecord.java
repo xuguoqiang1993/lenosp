@@ -51,6 +51,13 @@ public class ReportRecord {
     @Column(name = "event_description")
     private String eventDescription;
 
+    @Column(name = "task_name")
+    private String taskName ;
+
+    @Column(name = "process_instance_id")
+    private  String processInstanceId ;
+
+
     /**
      * @return id
      */
@@ -274,4 +281,36 @@ public class ReportRecord {
     public void setEventDescription(String eventDescription) {
         this.eventDescription = eventDescription == null ? null : eventDescription.trim();
     }
+
+    /**
+     * @return TaskName
+     */
+    public String getTaskName() {
+        return taskName;
+    }
+
+    /**
+     * @param taskName
+     */
+    public void setTaskName(String taskName) {
+        this.taskName = taskName == null ? null : taskName.trim();
+    }
+
+    /**
+     * @return processInstanceId
+     */
+    public String getProcessInstanceId() {
+        return processInstanceId;
+    }
+
+    /**
+     * @param processInstanceId
+     */
+    public void setProcessInstanceId(String processInstanceId) {
+        this.processInstanceId = processInstanceId == null ? null : processInstanceId.trim();
+    }
+
+
+
+
 }

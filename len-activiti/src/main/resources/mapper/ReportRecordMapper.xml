@@ -22,4 +22,19 @@
     <result column="filestr" jdbcType="VARCHAR" property="filestr" />
     <result column="event_description" jdbcType="VARCHAR" property="eventDescription" />
   </resultMap>
+
+  <select id="selectListByPage" parameterType="com.len.entity.ReportRecord" resultMap="BaseResultMap">
+    SELECT *
+    from report_record
+    <where>
+      <if test="userId!=null and userId!=''">and user_id=#{userId}</if>
+      <!--<if test="beginTime!=null">-->
+        <!--<![CDATA[   and DATE_FORMAT(begin_time, '%Y-%m-%d')>=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')   ]]>-->
+      <!--</if>-->
+      <!--<if test="endTime!=null">-->
+        <!--<![CDATA[  and DATE_FORMAT(end_time, '%Y-%m-%d') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d')    ]]>-->
+      <!--</if>-->
+    </where>
+  </select>
+
 </mapper>

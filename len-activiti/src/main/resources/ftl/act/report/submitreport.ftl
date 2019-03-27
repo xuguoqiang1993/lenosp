@@ -121,7 +121,7 @@
        <div class="layui-form-item layui-form-text layui-col-md10" >
 
            <div class="layui-input-block" >
-          <input type="hidden" id="imgUrl" name="imgUrl" value=""/>
+          <input type="hidden" id="fileUrl" name="fileUrl" value=""/>
        <button type="button" class="layui-btn" id="picImgs">
            <i class="layui-icon">&#xe67c;</i>上传图片
        </button>
@@ -311,13 +311,68 @@
 
                         });
                     }
-                    ,allDone: function(obj){ //当文件全部被提交后，才触发
+                    ,allDone: function(obj){
+                        //当所有文件被提交之后，开始提交表单
+                        var eventCarNo = $("#eventCarNo").val().trim(); //车牌
+                        var eventCarNoColor = $("#eventCarnocolor").val().trim(); //车牌颜色
+                        var eventCarNoType = $("#eventCarnotype").val().trim(); //车牌类型
+                        var eventCarColor = $("#eventCarcolor").val().trim(); //车辆颜色
+                        var eventCarType = $("#eventCartype").val().trim(); //车辆类型
+                        var eventRoad=$("#eventRoad").val().trim(); //违法地点
+                        var eventCarDir=$("#eventCarDir").val().trim(); //方向
+                        var eventRunKm=$("#eventRunKm").val().trim(); //公里桩
+                        var carEvent=$("#carEvent").val().trim();  //行为
+                        var eventTime = $("#eventTime").val().trim() ; //时间
+                        var eventDescription=$("#eventDescription").val().trim();  //隐患描述
+                        var filestr = $("#fileUrl").val();
+                            $.ajax({
+                            url:'${re.contextPath}/report/submitReportRecord',
+                            type:'post',
+                            data : {
+                                "eventCarNo":eventCarNo,
+                                "eventCarNoColor":eventCarNoColor,
+                                "eventCarNoType":eventCarNoType,
+                                "eventCarColor":eventCarColor,
+                                "eventCarType":eventCarType,
+                                "eventRoad" : eventRoad ,//违法地点
+                                "eventCarDir": eventCarDir,//方向
+                                "eventRunKm" : eventRunKm, //KM公里桩
+                                "carEvent": carEvent, //行为
+                                "eventTime":eventTime,
+                                "eventDescription":eventDescription, //描述
+                                "filestr": filestr,  //文件名称
+
+                        },
+                            async:false, traditional: true,
+                            success:function(){
+                             console.log("success");
+                            },error:function(){
+                            layer.alert("请求失败", {icon: 6},function () {
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                            });
+                            }
+                            });
+                         // 将隐藏的文件路径清空
+
                         console.log(obj.total); //得到总文件数
                         console.log(obj.successful); //请求成功的文件数
                         console.log(obj.aborted); //请求失败的文件数
                     }
                     ,done: function(res, index, upload){ //每个文件提交一次触发一次。详见“请求成功的回调”
-                        imgUrl
+                       //文件路径拼接
+                        var fileurl = "";
+                        var getfileUrlByInput = $("#fileUrl").val();
+                        if(getfileUrlByInput==""){
+                         fileurl = res.filepath;
+                        }else{
+                            fileurl = getfileUrlByInput + "," + res.filepath ;
+                        }
+                        //然后见文件路径赋值给input
+                        $("#fileUrl").attr("value",fileurl);
+                        console.log(res);
+                        console.log(index);
+                           console.log("123412");
                     }
                     ,error: function(){
                         //请求异常回调
@@ -329,32 +384,16 @@
                 var form = layui.form; //只有执行了这一步，部分表单元素才会自动修饰成功
                 //但是，如果你的HTML是动态生成的，自动渲染就会失效
                 //因此你需要在相应的地方，执行下述方法来手动渲染，跟这类似的还有 element.init();
-            form.on('submit(formDemo)', function(data) {
-                <#--$.ajax({-->
-                    <#--url:'${re.contextPath}/report/addReport',-->
-                    <#--type:'post',-->
-                    <#--data:data.field,-->
-                    <#--async:false, traditional: true,-->
-                    <#--success:function(d){-->
-                        <#--var index = parent.layer.getFrameIndex(window.name);-->
-                        <#--if(d.flag){-->
-                            <#--parent.layer.close(index);-->
-                            <#--window.parent.layui.table.reload('leaveList');-->
-                            <#--window.top.layer.msg(d.msg,{icon:6,offset: 'rb',area:['120px','80px'],anim:2});-->
-                        <#--}else{-->
-                            <#--layer.msg(d.msg,{icon:5});-->
-                        <#--}-->
-                    <#--},error:function(){-->
-                        <#--layer.alert("请求失败", {icon: 6},function () {-->
-                            <#--var index = parent.layer.getFrameIndex(window.name);-->
-                            <#--parent.layer.close(index);-->
-                        <#--});-->
-                    <#--}-->
-                <#--});-->
-            return false;
-             });
+        form.on('submit(formDemo)', function(data){
+            console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+            console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+            console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
                form.render();
             });
+
+
 
 
 
