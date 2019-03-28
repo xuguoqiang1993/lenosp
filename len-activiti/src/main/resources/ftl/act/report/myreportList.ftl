@@ -24,29 +24,22 @@
 <body>
 <div class="lenos-search">
   <div class="select">
-    开始时间：
-    <div class="layui-inline">
-      <input class="layui-input"  placeholder="yyyy-MM-dd" height="20px" id="beginTime" autocomplete="off">
-    </div>
-    结束时间：
-    <div class="layui-inline">
-      <input class="layui-input"  placeholder="yyyy-MM-dd" height="20px" id="endTime" autocomplete="off">
-    </div>
-    <button class="select-on layui-btn layui-btn-sm" data-type="select"><i class="layui-icon"></i>
-    </button>
+    <#--车辆牌照：-->
+    <#--<div class="layui-inline">-->
+      <#--<input class="layui-input"  placeholder="yyyy-MM-dd" height="20px" id="beginTime" autocomplete="off">-->
+    <#--</div>-->
+    <#--违法时间：-->
+    <#--<div class="layui-inline">-->
+      <#--<input class="layui-input"  placeholder="yyyy-MM-dd" height="20px" id="endTime" autocomplete="off">-->
+    <#--</div>-->
+    <#--<button class="select-on layui-btn layui-btn-sm" data-type="select"><i class="layui-icon"></i>-->
+    <#--</button>-->
     <button class="layui-btn layui-btn-sm icon-position-button" id="refresh" style="float: right;"
             data-type="reload">
       <i class="layui-icon">ဂ</i>
     </button>
   </div>
 </div>
-<#--<div class="layui-col-md12">-->
-    <#--<div class="layui-btn-group">-->
-        <#--<button class="layui-btn layui-btn-normal" data-type="createreport">-->
-            <#--<i class="layui-icon">&#xe640;</i>新建请假-->
-        <#--</button>-->
-    <#--</div>-->
-<#--</div>-->
 
 <table id="reportList" class="layui-hide" lay-filter="report"></table>
 <script type="text/html" id="toolBar">
@@ -61,53 +54,12 @@
   {{# }}}
 </script>
 <script>
-  layui.laytpl.toDateString = function(d, format){
-    var date = new Date(d || new Date())
-        ,ymd = [
-      this.digit(date.getFullYear(), 4)
-      ,this.digit(date.getMonth() + 1)
-      ,this.digit(date.getDate())
-    ]
-        ,hms = [
-      this.digit(date.getHours())
-      ,this.digit(date.getMinutes())
-      ,this.digit(date.getSeconds())
-    ];
 
-    format = format || 'yyyy-MM-dd HH:mm:ss';
 
-    return format.replace(/yyyy/g, ymd[0])
-    .replace(/MM/g, ymd[1])
-    .replace(/dd/g, ymd[2])
-    .replace(/HH/g, hms[0])
-    .replace(/mm/g, hms[1])
-    .replace(/ss/g, hms[2]);
-  };
-
-  //数字前置补零
-  layui.laytpl.digit = function(num, length, end){
-    var str = '';
-    num = String(num);
-    length = length || 2;
-    for(var i = num.length; i < length; i++){
-      str += '0';
-    }
-    return num < Math.pow(10, length) ? str + (num|0) : num;
-  };
-
-  document.onkeydown = function (e) { // 回车提交表单
-    var theEvent = window.event || e;
-    var code = theEvent.keyCode || theEvent.which;
-    if (code == 13) {
-      $(".select .select-on").click();
-    }
-  }
-
-  layui.use('table', function () {
-    var table = layui.table,laydate = layui.laydate;
-
-    //方法级渲染
-    table.render({
+  layui.use(['table','laydate','layer'], function () {
+    var table = layui.table,laydate = layui.laydate,layer = layui.layer;
+    //方法级渲染(初始化)
+    var initTable = table.render({
       id: 'reportList',
       elem: '#reportList'
       , url: 'showReportList'
@@ -118,107 +70,33 @@
         {field: 'eventRoad', title: '道路名称', width: '10%', sort: true},
         {field: 'eventCarDir', title: '行车方向', width: '10%', sort: true},
         {field: 'carEvent', title: '违法行为', width: '10%', sort: true},
-        {field: 'eventTime', title: '提交时间', width: '10%', sort: true, templet: '<div>{{ layui.laytpl.toDateString(d.beginTime,"yyyy-MM-dd") }}</div>'},
+        {field: 'eventTime', title: '违法时间', width: '10%', sort: true},
+        {field: 'taskName', title: '审核状态', width: '10%', sort: true},
         {field: 'text', title: '操作', width: '20%', toolbar:'#toolBar'}
-
-
       ]]
       , page: true
       ,  height: 'full-84'
     });
+    //绑定刷新按钮
+    $("#refresh").click(
+            function () {
+              initTable.reload({
+               page: {
+                  curr: 1 //重新从第 1 页开始
+                }
+              });
+            }
+    );
+    //监听toolbar
+    table.on('toolbar(report)', function(obj){
+      console.log(123456778)
 
-    // var $ = layui.$, active = {
-    //   select: function () {
-    //     var beginTime = $('#beginTime').val();
-    //     var endTime = $('#endTime').val();
-    //     table.reload('reportList', {
-    //       where: {
-    //         beginTime: beginTime,
-    //         endTime:endTime
-    //       }
-    //     });
-    //   }
-    //   ,createreport:function(){
-    //    add("申请请假",'addreport',700,450);
-    //     }
-    //   ,reload:function(){
-    //     $('#beginTime').val('');
-    //    $('#endTime').val('');
-    //     table.reload('reportList', {
-    //       where: {
-    //         beginTime: null,
-    //         endTime: null
-    //       }
-    //     });
-    //   }
-    // };
-    //监听工具条
-//       table.on('tool(report)', function (obj) {
-//       var data = obj.data;
-//       if (obj.event === 'start') {
-//         start(data.key);
-//       }else if(obj.event === 'getProcImage'){
-// //        var url='getProcImage?processInstanceId='+data.processInstanceId+'';
-//         layer.open({
-//           id: 'report-image',
-//           type: 2,
-//           area: [ '880px', '400px'],
-//           fix: false,
-//           maxmin: true,
-//           shadeClose: false,
-//           shade: 0.4,
-//           title: '流程图',
-//             content: '/report/shinePics/' + data.processInstanceId
-//         });
-//       }else if(obj.event==='reportDetail'){
-//         layer.open({
-//           id: 'report-detail',
-//           type: 2,
-//           area: [ '880px', '400px'],
-//           fix: false,
-//           maxmin: true,
-//           shadeClose: false,
-//           shade: 0.4,
-//           title: '审核详情',
-//           content: "reportDetail?processId="+data.processInstanceId
-//         });
-//       }
-//     });
-//
-//       eleClick(active,'.layui-col-md12 .layui-btn');
-//       eleClick(active,'.select .layui-btn');
+    });
+
+
 
   });
 
-  function add(title, url, w, h) {
-    if (title == null || title == '') {
-      title = false;
-    }
-    ;
-    if (url == null || url == '') {
-      url = "404.html";
-    }
-    ;
-    if (w == null || w == '') {
-      w = ($(window).width() * 0.9);
-    }
-    ;
-    if (h == null || h == '') {
-      h = ($(window).height() - 50);
-    }
-    ;
-    layer.open({
-      id: 'report-add',
-      type: 2,
-      area: [w + 'px', h + 'px'],
-      fix: false,
-      maxmin: true,
-      shadeClose: false,
-      shade: 0.4,
-      title: title,
-      content: url
-    });
-  }
 
 </script>
 </body>
