@@ -160,4 +160,79 @@ public ReType showLeaveList(Model model, String page, String limit) {
 }
 
 
+   //展示我的代办
+
+    /**
+     * ---------我的任务---------
+     */
+    @GetMapping(value = "showReportTask")
+    public String showTask(Model model) {
+        return "/act/report/showReportTas";
+    }
+
+//    @GetMapping(value = "showReportTaskList")
+//    @ResponseBody
+//    public String showTaskList(Model model, com.len.entity.Task task, String page, String limit) {
+//        CurrentUser user = CommonUtil.getUser();
+//        SysRoleUser sysRoleUser = new SysRoleUser();
+//        sysRoleUser.setUserId(user.getId());
+//        List<SysRoleUser> userRoles = roleUserService.selectByCondition(sysRoleUser);
+//        List<String> roleString = new ArrayList<String>();
+//        for(SysRoleUser sru:userRoles)
+//        {
+//            roleString.add(sru.getRoleId());
+//        }
+//        List<Task> taskList = taskService.createTaskQuery().taskCandidateUser(user.getId()).list();
+//        List<Task> assigneeList =taskService.createTaskQuery().taskAssignee(user.getId()).list();
+//        List<Task> candidateGroup =taskService.createTaskQuery().taskCandidateGroupIn(roleString).list();
+//        taskList.addAll(assigneeList);
+//        taskList.addAll(candidateGroup);
+//        List<com.len.entity.Task> tasks = new ArrayList<>();
+//        Map<String, Object> map = new HashMap<>();
+//        com.len.entity.Task taskEntity = null;
+//
+//        Map<String, Map<String, Object>> mapMap = new HashMap<>();
+//        Map<String, Object> objectMap = null;
+//        Set<String> taskSet = new HashSet<String>();
+//        for (Task task1 : taskList) {
+//            objectMap = new HashMap<>();
+//            String taskId = task1.getId();
+//            if(taskSet.contains(taskId))
+//            {
+//                continue;
+//            }
+//
+//            map = taskService.getVariables(taskId);
+//            BaseTask userLeave = (BaseTask) map.get("baseTask");
+//
+//            taskEntity = new com.len.entity.Task(task1);
+//            taskEntity.setUserName(userLeave.getUserName());
+//            taskEntity.setReason(userLeave.getReason());
+//            taskEntity.setUrlpath(userLeave.getUrlpath());
+//            /**如果是自己*/
+//            if (user.getId().equals(userLeave.getUserId()) ) {
+//                if( map.get("flag")!=null)
+//                {
+//                    if(!(boolean) map.get("flag"))
+//                    {
+//                        objectMap.put("flag", true);
+//                    }else
+//                    {
+//                        objectMap.put("flag", false);
+//                    }
+//                }else
+//                {
+//                    objectMap.put("flag", true);
+//                }
+//            } else {
+//                objectMap.put("flag", false);
+//            }
+//            mapMap.put(taskEntity.getId(), objectMap);
+//            tasks.add(taskEntity);
+//            taskSet.add(taskId);
+//        }
+//        return ReType.jsonStrng(taskList.size(), tasks, mapMap, "id");
+//    }
+
+
 }
