@@ -89,7 +89,7 @@
     );
     //监听toolbar
     table.on('toolbar(report)', function(obj){
-      console.log(123456778)
+      console.log(123458)
 
     });
 
