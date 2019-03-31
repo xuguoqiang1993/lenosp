@@ -57,6 +57,9 @@ public class ReportRecord implements Serializable {
 
     @Column(name = "process_instance_id")
     private  String processInstanceId ;
+     @Column(name = "urlpath")
+     private  String urlpath;
+
 
 
     /**
@@ -310,6 +313,21 @@ public class ReportRecord implements Serializable {
     public void setProcessInstanceId(String processInstanceId) {
         this.processInstanceId = processInstanceId == null ? null : processInstanceId.trim();
     }
+    /**
+     * @return urlpath
+     */
+    public String getUrlpath() {
+        return urlpath;
+    }
+
+    /**
+     * @param urlpath
+     */
+    public void setUrlpath(String urlpath) {
+        this.urlpath = urlpath == null ? null : urlpath.trim();
+    }
+
+
 
 
 

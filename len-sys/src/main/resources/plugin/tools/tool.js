@@ -27,6 +27,22 @@ function popup(title, url, w, h,id) {
   });
 }
 
+function laypoenmax(title, url, id) {
+
+  layer.open({
+    id: id,
+    area: ['100%', '100%'],
+    type: 2,
+    fix: false,
+    maxmin: true,
+    shadeClose: true,
+    shade: 0.4,
+    title: title,
+    content: url
+  });
+}
+
+
 /**
  * 父窗口弹出
  * @param url

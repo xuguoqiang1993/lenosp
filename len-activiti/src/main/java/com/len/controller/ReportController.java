@@ -8,6 +8,7 @@ import com.len.entity.*;
 import com.len.exception.MyException;
 import com.len.service.CarMessService;
 import com.len.service.ReportRecordService;
+import com.len.service.RoleUserService;
 import com.len.util.*;
 
 import org.activiti.engine.RuntimeService;
@@ -24,9 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("report")
@@ -42,6 +41,8 @@ public class ReportController {
     private RuntimeService runtimeService;
     @Autowired
     TaskService taskService;
+    @Autowired
+    private RoleUserService roleUserService;
     //展示 违法举报From
     @GetMapping("showFromReport")
     public String showFromReport(){
@@ -66,13 +67,19 @@ public class ReportController {
         String name = user.getUsername();
         record.setUserId(id) ;
         record.setUsername(name);
-        System.out.println("success");
+        reportService.insertRecord(record);
+        //然后将url路径插入
+        Integer reportId = record.getId();
+        String urlpath = "/report/readOnlyReport/"+reportId;
+        record.setUrlpath(urlpath);
+
         //业务数据已经插入，开始开启流程
         Map<String, Object> map = new HashMap<>();
         map.put("baseTask", record);
         ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("report_process", map);
         record.setProcessInstanceId(processInstance.getId());
-        reportService.insertRecord(record);
+        reportService.updateByPrimaryKeySelective(record);
+
 
         return "success";
 
@@ -170,69 +177,96 @@ public ReType showLeaveList(Model model, String page, String limit) {
         return "/act/report/showReportTask";
     }
 
-//    @GetMapping(value = "showReportTaskList")
-//    @ResponseBody
-//    public String showTaskList(Model model, com.len.entity.Task task, String page, String limit) {
-//        CurrentUser user = CommonUtil.getUser();
-//        SysRoleUser sysRoleUser = new SysRoleUser();
-//        sysRoleUser.setUserId(user.getId());
-//        List<SysRoleUser> userRoles = roleUserService.selectByCondition(sysRoleUser);
-//        List<String> roleString = new ArrayList<String>();
-//        for(SysRoleUser sru:userRoles)
-//        {
-//            roleString.add(sru.getRoleId());
-//        }
-//        List<Task> taskList = taskService.createTaskQuery().taskCandidateUser(user.getId()).list();
-//        List<Task> assigneeList =taskService.createTaskQuery().taskAssignee(user.getId()).list();
-//        List<Task> candidateGroup =taskService.createTaskQuery().taskCandidateGroupIn(roleString).list();
-//        taskList.addAll(assigneeList);
-//        taskList.addAll(candidateGroup);
-//        List<com.len.entity.Task> tasks = new ArrayList<>();
-//        Map<String, Object> map = new HashMap<>();
-//        com.len.entity.Task taskEntity = null;
-//
-//        Map<String, Map<String, Object>> mapMap = new HashMap<>();
-//        Map<String, Object> objectMap = null;
-//        Set<String> taskSet = new HashSet<String>();
-//        for (Task task1 : taskList) {
-//            objectMap = new HashMap<>();
-//            String taskId = task1.getId();
-//            if(taskSet.contains(taskId))
-//            {
-//                continue;
-//            }
-//
-//            map = taskService.getVariables(taskId);
-//            BaseTask userLeave = (BaseTask) map.get("baseTask");
-//
-//            taskEntity = new com.len.entity.Task(task1);
-//            taskEntity.setUserName(userLeave.getUserName());
-//            taskEntity.setReason(userLeave.getReason());
-//            taskEntity.setUrlpath(userLeave.getUrlpath());
-//            /**如果是自己*/
-//            if (user.getId().equals(userLeave.getUserId()) ) {
-//                if( map.get("flag")!=null)
-//                {
-//                    if(!(boolean) map.get("flag"))
-//                    {
-//                        objectMap.put("flag", true);
-//                    }else
-//                    {
-//                        objectMap.put("flag", false);
-//                    }
-//                }else
-//                {
-//                    objectMap.put("flag", true);
-//                }
-//            } else {
-//                objectMap.put("flag", false);
-//            }
-//            mapMap.put(taskEntity.getId(), objectMap);
-//            tasks.add(taskEntity);
-//            taskSet.add(taskId);
-//        }
-//        return ReType.jsonStrng(taskList.size(), tasks, mapMap, "id");
-//    }
+    @GetMapping(value = "showReportTaskList")
+    @ResponseBody
+    public String showTaskList(Model model, com.len.entity.Task task, String page, String limit) {
+        CurrentUser user = CommonUtil.getUser();
+
+        SysRoleUser sysRoleUser = new SysRoleUser();
+        sysRoleUser.setUserId(user.getId());
+        List<SysRoleUser> userRoles = roleUserService.selectByCondition(sysRoleUser);
+        List<String> roleString = new ArrayList<String>();
+        for(SysRoleUser sru:userRoles)
+        {
+            roleString.add(sru.getRoleId());
+        }
+        //根据用户查询任务
+        List<Task> taskList = taskService.createTaskQuery().taskCandidateUser(user.getId()).list();
+        //该用户受理任务的列表
+        List<Task> assigneeList =taskService.createTaskQuery().taskAssignee(user.getId()).list();
+        //根据用户组查询任务
+        List<Task> candidateGroup =taskService.createTaskQuery().taskCandidateGroupIn(roleString).list();
+
+        taskList.addAll(assigneeList);
+        taskList.addAll(candidateGroup);
+
+        List<com.len.entity.Task> tasks = new ArrayList<>();
+        Map<String, Object> map = new HashMap<>();
+        com.len.entity.Task taskEntity = null;
+
+        Map<String, Map<String, Object>> mapMap = new HashMap<>();
+        Map<String, Object> objectMap = null;
+        Set<String> taskSet = new HashSet<String>();
+        for (Task task1 : taskList) {
+            objectMap = new HashMap<>();
+            String taskId = task1.getId();
+            if(taskSet.contains(taskId))
+            {
+                continue;
+            }
+            //根据任务id来获取信息
+            map = taskService.getVariables(taskId);
+            //获取到record信息
+            ReportRecord record = (ReportRecord) map.get("baseTask");
+
+            taskEntity = new com.len.entity.Task(task1);
+            taskEntity.setUserName(record.getUsername());
+
+
+            /**如果是自己*/
+            if (user.getId().equals(record.getUserId()) ) {
+                if( map.get("flag")!=null)
+                {
+                    if(!(boolean) map.get("flag"))
+                    {
+                        objectMap.put("flag", true);
+                    }else
+                    {
+                        objectMap.put("flag", false);
+                    }
+                }else
+                {
+                    objectMap.put("flag", true);
+                }
+            } else {
+                objectMap.put("flag", false);
+            }
+            mapMap.put(taskEntity.getId(), objectMap);
+            tasks.add(taskEntity);
+            taskSet.add(taskId);
+        }
+        System.out.println(ReType.jsonStrng(taskList.size(), tasks, mapMap, "id"));
+        return ReType.jsonStrng(taskList.size(), tasks, mapMap, "id");
+    }
+
+
+    @GetMapping("agent/{id}")
+    public String agent(Model model, @PathVariable("id") String taskId) {
+        Map<String, Object> variables = taskService.getVariables(taskId);
+        ReportRecord record = (ReportRecord) variables.get("baseTask");
+
+       model.addAttribute("reportUrl", record.getUrlpath());
+        model.addAttribute("taskId", taskId);
+        return "/act/report/report-task-agent-iframe";
+    }
+
+    @GetMapping("readOnlyReport/{billId}")
+    public String readOnlyLeave(Model model, @PathVariable String billId) {
+        ReportRecord reportRecord = reportService.selectByPrimaryKey(billId);
+        model.addAttribute("report", reportRecord);
+        System.out.println(reportRecord.getEventCarColor());
+        return "/act/report/update-report-readonly";
+    }
 
 
 }

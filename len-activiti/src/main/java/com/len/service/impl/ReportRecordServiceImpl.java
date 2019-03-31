@@ -3,6 +3,7 @@ package com.len.service.impl;
 import com.len.base.BaseMapper;
 import com.len.base.impl.BaseServiceImpl;
 import com.len.entity.ReportRecord;
+import com.len.entity.UserLeave;
 import com.len.mapper.ReportRecordMapper;
 import com.len.service.ReportRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,11 @@ public class ReportRecordServiceImpl  implements ReportRecordService {
         String taskName = record.getTaskName();
         String userId = record.getUserId();
         reportRecordMapper.updateTaskNameByUserId(taskName,userId);
+    }
+
+    @Override
+    public ReportRecord selectByPrimaryKey(String billId) {
+        return reportRecordMapper.selectByPrimaryKey(billId);
     }
 
 
