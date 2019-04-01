@@ -28,6 +28,7 @@ To change this template use File | Settings | File Templates.-->
     </div>
 
   <form class="layui-form layui-form-pane" style="margin-left: 20px;">
+    <input type="hidden" name="taskId" value="${taskId}">
     <div class="layui-form-item layui-form-text layui-col-md10" >
       <label class="layui-form-label">审核信息</label>
       <div class="layui-input-block">
@@ -76,7 +77,7 @@ To change this template use File | Settings | File Templates.-->
 
     form.on('submit(no)',function(data){
       data.field.flag=false;
-      layerAjax('complete',data.field,'taskList');
+      layerAjax('${re.contextPath}/report/agent/complete',data.field,'taskList');
       return false;
     });
 

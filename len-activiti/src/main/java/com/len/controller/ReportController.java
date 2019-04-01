@@ -1,9 +1,11 @@
 package com.len.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.len.base.CurrentUser;
+import com.len.core.shiro.ShiroUtil;
 import com.len.entity.*;
 import com.len.exception.MyException;
 import com.len.service.CarMessService;
@@ -11,8 +13,12 @@ import com.len.service.ReportRecordService;
 import com.len.service.RoleUserService;
 import com.len.util.*;
 
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricActivityInstance;
+import org.activiti.engine.history.HistoricDetail;
+import org.activiti.engine.history.HistoricVariableUpdate;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +49,8 @@ public class ReportController {
     TaskService taskService;
     @Autowired
     private RoleUserService roleUserService;
+    @Autowired
+    private HistoryService historyService;
     //展示 违法举报From
     @GetMapping("showFromReport")
     public String showFromReport(){
@@ -267,6 +275,93 @@ public ReType showLeaveList(Model model, String page, String limit) {
         System.out.println(reportRecord.getEventCarColor());
         return "/act/report/update-report-readonly";
     }
+
+
+    //开始审核
+    @PostMapping("agent/complete")
+    @ResponseBody
+    public JsonUtil complete(LeaveOpinion op, HttpServletRequest request) {
+
+        Map<String, Object> variables = taskService.getVariables(op.getTaskId());
+
+        CurrentUser user = ShiroUtil.getCurrentUse();
+        op.setCreateTime(new Date());
+        op.setOpId(user.getId());
+        op.setOpName(user.getRealName());
+        JsonUtil j = new JsonUtil();
+        Map<String, Object> map = new HashMap<>();
+        map.put("flag", op.isFlag());
+
+        //判断节点是否已经拒绝过一次了
+        Object needend = variables.get("needend");
+        if(needend!=null && (boolean ) needend &&  (!op.isFlag()) )
+        {
+            map.put("needfinish",-1); //结束
+        }else
+        {
+            if(op.isFlag())
+            {
+                map.put("needfinish",1);//通过下一个节点
+            }else
+            {
+                map.put("needfinish",0);//不通过
+            }
+        }
+        //审批信息叠加
+        List<LeaveOpinion> leaveList = new ArrayList<>();
+        //private String leaveOpinionList = "leaveOpinionList";
+        Object o = variables.get("leaveOpinionList");
+        if (o != null) {
+            leaveList = (List<LeaveOpinion>) o;
+        }
+        leaveList.add(op);
+        map.put("leaveOpinionList", leaveList);
+        j.setMsg("审核成功" + (op.isFlag() ? "<font style='color:green'>[通过]</font>" : "<font style='color:red'>[未通过]</font>"));
+        taskService.complete(op.getTaskId(), map);
+        return j;
+    }
+
+    /**
+     * 根据 执行对象id获取审批信息
+     *
+     * @param model
+     * @param processId
+     * @return
+     */
+    @GetMapping("leaveDetail")
+    public String leaveDetail(Model model, String processId) {
+        ProcessInstance instance = runtimeService.createProcessInstanceQuery()
+                .processInstanceId(processId).singleResult();
+        //保证运行ing
+        List<LeaveOpinion> leaveList = null;
+        List<HistoricActivityInstance> historicActivityInstanceList = new ArrayList<>();
+        if (instance != null) {
+            Task task = this.taskService.createTaskQuery().processInstanceId(processId).singleResult();
+            Map<String, Object> variables = taskService.getVariables(task.getId());
+            Object o = variables.get("leaveOpinionList");
+            if (o != null) {
+                /*获取历史审核信息*/
+                leaveList = (List<LeaveOpinion>) o;
+            }
+        } else {
+            leaveList = new ArrayList<>();
+            List<HistoricDetail> list = historyService.createHistoricDetailQuery().
+                    processInstanceId(processId).list();
+            HistoricVariableUpdate variable = null;
+            for (HistoricDetail historicDetail : list) {
+                variable = (HistoricVariableUpdate) historicDetail;
+                String variableName = variable.getVariableName();
+                if ("leaveOpinionList".equals(variable.getVariableName())) {
+                    leaveList.clear();
+                    leaveList.addAll((List<LeaveOpinion>) variable.getValue());
+                }
+            }
+        }
+        model.addAttribute("leaveDetail", JSON.toJSONString(leaveList));
+        return "/act/leave/leaveDetail";
+    }
+
+
 
 
 }
