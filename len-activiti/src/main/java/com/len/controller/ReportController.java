@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -377,10 +378,28 @@ public ReType showLeaveList(Model model, String page, String limit) {
                 }
             }
         }
-        model.addAttribute("leaveDetail", JSON.toJSONString(leaveList));
+       List<LeaveOpinion> changeList = new LinkedList<LeaveOpinion>();
+        if(leaveList!=null) {
+            for (int i = 0; i < leaveList.size(); i++) {
+                LeaveOpinion leave = leaveList.get(i);
+                Date createTime = leave.getCreateTime();
+                String gettime = getStringtime(createTime);
+                leave.setGetTime(gettime);
+                changeList.add(leave);
+            }
+        }
 
-        System.out.println("66666"+JSON.toJSONString(leaveList));
+        model.addAttribute("leaveDetail", JSON.toJSONString(changeList));
+
+        System.out.println("66666"+JSON.toJSONString(changeList));
         return "/act/report/report-detail-iframe";
+    }
+
+    //将时间戳转为具体时间
+    public String getStringtime(Date date){
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
+        String gettime = format.format(date);
+        return gettime;
     }
 
 

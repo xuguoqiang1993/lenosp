@@ -39,6 +39,8 @@ public class LeaveOpinion implements Serializable{
   private String opinion;
   //审批时间
   private Date createTime;
+  //string 审批时间
+  private String getTime;
   //是否通过
   private boolean flag;
   //流程id

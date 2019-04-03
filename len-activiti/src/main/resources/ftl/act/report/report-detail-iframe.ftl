@@ -33,12 +33,13 @@ To change this template use File | Settings | File Templates.-->
             <i class="layui-icon layui-timeline-axis">&#x1005;</i>
             <div class="layui-timeline-content layui-text">
                 <h3 class="layui-timeline-title">8月18日</h3>
-
+                  发起审批
             </div>
         </li>
 
 
     </ul>
+
 
     <script>
 
@@ -49,9 +50,20 @@ To change this template use File | Settings | File Templates.-->
         <ul>
             {{#  layui.each(d, function(index, item){ }}
             <li class="layui-timeline-item">
+                {{# if(item.flag==true){ }}
                 <i class="layui-icon layui-timeline-axis">&#x1005;</i>
                 <div class="layui-timeline-content layui-text">
-                    <h3 class="layui-timeline-title">{{item.createTime}}</h3>
+                    <h3 class="layui-timeline-title">  {{item.opName}}  审核通过</h3>
+                {{#  }else{
+    }}
+                <i class="layui-icon layui-timeline-axis">&#x1007;</i>
+                    <div class="layui-timeline-content layui-text">
+                        <h3 class="layui-timeline-title">  {{item.opName}} 审核不通过</h3>
+                {{#
+    }}}
+
+
+
 
                 </div>
             </li>
