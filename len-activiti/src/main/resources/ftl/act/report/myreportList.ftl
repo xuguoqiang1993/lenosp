@@ -65,6 +65,7 @@
       , url: 'showReportList'
       , cols: [[
          {checkbox: true, fixed: true, width: '5%'},
+        {field: 'id', title: '任务编号', width: '10%', sort: true},
          {field: 'eventCarNo', title: '车辆牌照', width: '10%', sort: true},
         {field: 'eventRunKm', title: '公里桩', width: '10%', sort: true},
         {field: 'eventRoad', title: '道路名称', width: '10%', sort: true},
@@ -72,6 +73,7 @@
         {field: 'carEvent', title: '违法行为', width: '10%', sort: true},
         {field: 'eventTime', title: '违法时间', width: '10%', sort: true},
         {field: 'taskName', title: '审核状态', width: '10%', sort: true},
+        {field: 'processInstanceId', title: '流程实例Id', width: '10%', sort: true},
         {field: 'text', title: '操作', width: '20%', toolbar:'#toolBar'}
       ]]
       , page: true
@@ -82,14 +84,15 @@
             function () {
               initTable.reload({
                page: {
-                  curr: 1 //重新从第 1 页开始
+                  curr: 1 //重新从第 1 页开始0
                 }
               });
             }
     );
-    //监听toolbar
-    table.on('toolbar(report)', function(obj){
-      console.log(12)
+    //监听toolbar监听工具条
+    table.on('tool(report)', function(obj){
+      var data = obj.data;
+      laypoenmax('查看任务详情','${re.contextPath}/report/leaveDetail/'+data.processInstanceId,'task-detail');
 
     });
 

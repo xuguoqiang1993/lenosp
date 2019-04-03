@@ -13,12 +13,16 @@ import com.len.service.ReportRecordService;
 import com.len.service.RoleUserService;
 import com.len.util.*;
 
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
+import org.activiti.engine.*;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.history.HistoricDetail;
 import org.activiti.engine.history.HistoricVariableUpdate;
+import org.activiti.engine.impl.RepositoryServiceImpl;
+import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
+import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.pvm.PvmActivity;
+import org.activiti.engine.impl.pvm.PvmTransition;
+import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +55,8 @@ public class ReportController {
     private RoleUserService roleUserService;
     @Autowired
     private HistoryService historyService;
+    @Autowired
+    private ProcessEngine processEngine ;
     //展示 违法举报From
     @GetMapping("showFromReport")
     public String showFromReport(){
@@ -268,6 +274,16 @@ public ReType showLeaveList(Model model, String page, String limit) {
         return "/act/report/report-task-agent-iframe";
     }
 
+    @GetMapping("detail/{id}")
+    public String detail(Model model, @PathVariable("id") String taskId) {
+        Map<String, Object> variables = taskService.getVariables(taskId);
+        ReportRecord record = (ReportRecord) variables.get("baseTask");
+
+        model.addAttribute("reportUrl", record.getUrlpath());
+        model.addAttribute("taskId", taskId);
+        return "/act/report/report-detail-iframe";
+    }
+
     @GetMapping("readOnlyReport/{billId}")
     public String readOnlyLeave(Model model, @PathVariable String billId) {
         ReportRecord reportRecord = reportService.selectByPrimaryKey(billId);
@@ -328,8 +344,9 @@ public ReType showLeaveList(Model model, String page, String limit) {
      * @param processId
      * @return
      */
-    @GetMapping("leaveDetail")
-    public String leaveDetail(Model model, String processId) {
+    @GetMapping("leaveDetail/{processId}")
+    public String getleaveDetail(Model model, @PathVariable String processId) {
+        getNode(processId);
         ProcessInstance instance = runtimeService.createProcessInstanceQuery()
                 .processInstanceId(processId).singleResult();
         //保证运行ing
@@ -339,6 +356,9 @@ public ReType showLeaveList(Model model, String page, String limit) {
             Task task = this.taskService.createTaskQuery().processInstanceId(processId).singleResult();
             Map<String, Object> variables = taskService.getVariables(task.getId());
             Object o = variables.get("leaveOpinionList");
+            ReportRecord record = (ReportRecord) variables.get("baseTask");
+            String urlPath = record.getUrlpath();
+            model.addAttribute("reportUrl",urlPath);
             if (o != null) {
                 /*获取历史审核信息*/
                 leaveList = (List<LeaveOpinion>) o;
@@ -358,10 +378,43 @@ public ReType showLeaveList(Model model, String page, String limit) {
             }
         }
         model.addAttribute("leaveDetail", JSON.toJSONString(leaveList));
-        return "/act/leave/leaveDetail";
+
+        System.out.println("66666"+JSON.toJSONString(leaveList));
+        return "/act/report/report-detail-iframe";
     }
 
 
+    //获取当前节点以及下一个节点的方法
+    public void getNode(String procInstanceId){
+        Task task = taskService.createTaskQuery().processInstanceId(procInstanceId).singleResult();
+
+        //然后根据当前任务获取当前流程的流程定义，然后根据流程定义获得所有的节点：
+        RepositoryService rs = processEngine.getRepositoryService();
+        ProcessDefinitionEntity def = (ProcessDefinitionEntity) ((RepositoryServiceImpl)rs).getDeployedProcessDefinition(task.getProcessDefinitionId());
+
+        List<ActivityImpl> activitiList = def.getActivities();  //rs是指RepositoryService的实例
+
+        //根据任务获取当前流程执行ID，执行实例以及当前流程节点的ID：
+
+        String excId = task.getExecutionId();
+        ExecutionEntity execution = (ExecutionEntity) runtimeService.createExecutionQuery().executionId(excId).singleResult();
+        String activitiId = execution.getActivityId();
+
+        //然后循环activitiList 并判断出当前流程所处节点，然后得到当前节点实例，根据节点实例获取所有从当前节点出发的路径，然后根据路径获得下一个节点实例：
+
+        for(ActivityImpl activityImpl:activitiList){
+            String id = activityImpl.getId();
+            if(activitiId.equals(id)){
+                System.out.println("当前任务："+activityImpl.getProperty("name")); //输出某个节点的某种属性
+                List<PvmTransition> outTransitions = activityImpl.getOutgoingTransitions();//获取从某个节点出来的所有线路
+                for(PvmTransition tr:outTransitions){
+                    PvmActivity ac = tr.getDestination(); //获取线路的终点节点
+                    System.out.println("下一步任务任务："+ac.getProperty("name"));
+                }
+                break;
+            }
+        }
+    }
 
 
 }
